@@ -4,7 +4,7 @@
 
 -module(clientLogger).
 -behaviour(gen_event).
--export([init/1, handle_event/2, handle_call/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1,start_link/0, handle_event/2, handle_call/2, handle_info/2, terminate/2, code_change/3]).
 
 %% ====================================================================
 %% API functions
@@ -32,7 +32,9 @@
 init([]) ->
     {ok, #state{}}.
 
-
+start_link() ->
+{ok, Pid} = gen_event:start_link({local, ?MODULE}),
+gen_event:add_handler(?MODULE, ?MODULE, []), {ok, Pid}.
 %% handle_event/2
 %% ====================================================================
 %% @doc <a href="http://www.erlang.org/doc/man/gen_event.html#Module:handle_event-2">gen_event:handle_event/2</a>
@@ -45,8 +47,17 @@ init([]) ->
 	Handler2 :: Module2 | {Module2, Id :: term()},
 	Module2 :: atom().
 %% ====================================================================
+handle_event({complain},State)->
+error_logger:info_msg("Client: Let's complain!~n",[]),
+{ok, State};
+
+handle_event({problemSolved},State)->
+error_logger:info_msg("Client: the job well done!~n",[]),
+{ok, State};
+
+
 handle_event(Event, State) ->
-    {ok, State}.
+{ok, State}.
 
 
 %% handle_call/2

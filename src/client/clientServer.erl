@@ -4,7 +4,7 @@
 
 -module(clientServer).
 -behaviour(gen_server).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1, start_link/0, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 %% ====================================================================
 %% API functions
@@ -33,6 +33,8 @@
 init([]) ->
     {ok, #state{}}.
 
+start_link() ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 %% handle_call/3
 %% ====================================================================
@@ -51,6 +53,15 @@ init([]) ->
 	Timeout :: non_neg_integer() | infinity,
 	Reason :: term().
 %% ====================================================================
+handle_call({problemSolved}, From, State) ->
+	Reply = clientLogic:client(problemSolved),
+	{reply, Reply, State};
+
+handle_call({startLoop}, From, State) ->
+	Reply = clientLogic:client(startLoop),
+	{reply, Reply, State};
+
+
 handle_call(Request, From, State) ->
     Reply = ok,
     {reply, Reply, State}.

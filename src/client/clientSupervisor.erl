@@ -4,7 +4,7 @@
 
 -module(clientSupervisor).
 -behaviour(supervisor).
--export([init/1]).
+-export([init/1,start_link/1).
 
 %% ====================================================================
 %% API functions
@@ -35,9 +35,14 @@
 	Modules :: [module()] | dynamic.
 %% ====================================================================
 init([]) ->
-    AChild = {'AName',{'AModule',start_link,[]},
-	      permanent,2000,worker,['AModule']},
-    {ok,{{one_for_all,0,1}, [AChild]}}.
+    AChild = {clientServerNode,{clientServer,start_link,[]},
+	      permanent,2000,worker,[clientServer]},
+	BChild = {clientLoggerNode,{clientLogger,start_link,[]},
+	      permanent,2000,worker,[clientServer]},
+    {ok,{{one_for_all,0,1}, [AChild,BChild]}}.
+
+start_link(Args) ->
+	supervisor:start_link({local,?MODULE}, ?MODULE, Args).
 
 %% ====================================================================
 %% Internal functions
