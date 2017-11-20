@@ -4,7 +4,7 @@
 
 -module(clientSupervisor).
 -behaviour(supervisor).
--export([init/1,start_link/1).
+-export([init/1,start_link/1]).
 
 %% ====================================================================
 %% API functions
