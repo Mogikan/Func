@@ -1,8 +1,8 @@
 %% @author Korney
-%% @doc @todo Add description to clientSupervisor.
+%% @doc @todo Add description to programmerSupervisor.
 
 
--module(clientSupervisor).
+-module(programmerSupervisor).
 -behaviour(supervisor).
 -export([init/1,start_link/1]).
 
@@ -35,10 +35,10 @@
 	Modules :: [module()] | dynamic.
 %% ====================================================================
 init([]) ->
-    AChild = {clientServerNode,{clientServer,start_link,[]},
-	      permanent,2000,worker,[clientServer]},
-	BChild = {clientLoggerNode,{clientLogger,start_link,[]},
-	      permanent,2000,worker,[clientLogger]},
+	AChild = {programmerServerNode,{programmerServer,start_link,[]},
+	      permanent,2000,worker,[programmerServer]},
+	BChild = {pmLoggerNode,{programmerLogger,start_link,[]},
+	      permanent,2000,worker,[programmerLogger]},
     {ok,{{one_for_all,0,1}, [AChild,BChild]}}.
 
 start_link(Args) ->

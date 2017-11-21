@@ -1,8 +1,8 @@
 %% @author Korney
-%% @doc @todo Add description to clientSupervisor.
+%% @doc @todo Add description to testerSupervisor.
 
 
--module(clientSupervisor).
+-module(testerSupervisor).
 -behaviour(supervisor).
 -export([init/1,start_link/1]).
 
@@ -35,10 +35,10 @@
 	Modules :: [module()] | dynamic.
 %% ====================================================================
 init([]) ->
-    AChild = {clientServerNode,{clientServer,start_link,[]},
-	      permanent,2000,worker,[clientServer]},
-	BChild = {clientLoggerNode,{clientLogger,start_link,[]},
-	      permanent,2000,worker,[clientLogger]},
+	AChild = {testerServerNode,{testerServer,start_link,[]},
+	      permanent,2000,worker,[testerServer]},
+	BChild = {testerLoggerNode,{testerLogger,start_link,[]},
+	      permanent,2000,worker,[testerLogger]},
     {ok,{{one_for_all,0,1}, [AChild,BChild]}}.
 
 start_link(Args) ->

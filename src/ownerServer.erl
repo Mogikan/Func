@@ -1,10 +1,10 @@
 %% @author Korney
-%% @doc @todo Add description to clientServer.
+%% @doc @todo Add description to ownerServer.
 
 
--module(clientServer).
+-module(ownerServer).
 -behaviour(gen_server).
--export([init/1, start_link/0, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1,start_link/0, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 %% ====================================================================
 %% API functions
@@ -35,7 +35,6 @@ init([]) ->
 
 start_link() ->
 	gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
-
 %% handle_call/3
 %% ====================================================================
 %% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:handle_call-3">gen_server:handle_call/3</a>
@@ -53,8 +52,12 @@ start_link() ->
 	Timeout :: non_neg_integer() | infinity,
 	Reason :: term().
 %% ====================================================================
-handle_call({problemSolved}, From, State) ->
-	Reply = clientLogic:client(problemSolved),
+handle_call({fixReady}, From, State) ->
+	Reply = ownerLogic:owner(fixReady),
+	{reply, Reply, State};
+
+handle_call({complain}, From, State) ->
+	Reply = ownerLogic:owner(complain),
 	{reply, Reply, State};
 
 handle_call(Request, From, State) ->
@@ -73,10 +76,6 @@ handle_call(Request, From, State) ->
 	NewState :: term(),
 	Timeout :: non_neg_integer() | infinity.
 %% ====================================================================
-handle_cast({startLoop}, State) ->
-	clientLogic:client(startLoop),
-	{noreply, State};
-
 handle_cast(Msg, State) ->
     {noreply, State}.
 

@@ -1,8 +1,8 @@
 %% @author Korney
-%% @doc @todo Add description to clientSupervisor.
+%% @doc @todo Add description to ownerSupervisor.
 
 
--module(clientSupervisor).
+-module(ownerSupervisor).
 -behaviour(supervisor).
 -export([init/1,start_link/1]).
 
@@ -35,10 +35,10 @@
 	Modules :: [module()] | dynamic.
 %% ====================================================================
 init([]) ->
-    AChild = {clientServerNode,{clientServer,start_link,[]},
-	      permanent,2000,worker,[clientServer]},
-	BChild = {clientLoggerNode,{clientLogger,start_link,[]},
-	      permanent,2000,worker,[clientLogger]},
+	AChild = {ownerServerNode,{ownerServer,start_link,[]},
+	      permanent,2000,worker,[ownerServer]},
+	BChild = {ownerLoggerNode,{ownerLogger,start_link,[]},
+	      permanent,2000,worker,[ownerLogger]},
     {ok,{{one_for_all,0,1}, [AChild,BChild]}}.
 
 start_link(Args) ->

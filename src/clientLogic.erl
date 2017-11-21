@@ -7,22 +7,25 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--export([client/1,getNodeAddress/0]).
+-export([getNodeAddress/1,client/1,notify/1]).
 
+notify(Atom)->
+	gen_event:notify(clientLogger,{Atom}).
 
-getNodeAddress()->
-nodeHelper:buildNodeAddress(client).
+getNodeAddress(Atom)->
+	nodeHelper:buildNodeAddress(Atom).
 
 client(startLoop)->
-gen_event:notify(clientLogger,{complain}),
-gen_server:call(ownerServer,getNodeAddress(),{complain});
-
+	notify(complain),
+	timer:sleep(500),
+	%gen_server:call({ownerServer,getNodeAddress('owner')},{complain},infinity);
+gen_server:call({global,'ownerServer'},{complain},infinity);
 
 
 client(problemSolved)->
-gen_event:notify(clientLogger, {problemSolved}),
-gen_server:call({clientServer,getNodeAddress()},{startLoop}),
-ok.
+	notify(problemSolved),
+	timer:sleep(500),
+	gen_server:cast({clientServer,getNodeAddress('client')},{startLoop}).
 
 
 
