@@ -34,7 +34,7 @@ init([]) ->
     {ok, #state{}}.
 
 start_link() ->
-	gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 %% handle_call/3
 %% ====================================================================
 %% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:handle_call-3">gen_server:handle_call/3</a>
